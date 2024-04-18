@@ -1,8 +1,8 @@
 # Dishes course
 
-## This projects is under development.
-## Build with express and mongoose.
-## It is built for practicing express library fundamentals based on online courses.
+This projects is under development.
+Build with express and mongoose.
+It is built for practicing express library fundamentals based on some online courses.
 
 
 ## To check this project use the next commands
