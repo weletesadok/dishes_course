@@ -1,6 +1,6 @@
 # 🍽️ Welcome to Dishes Course! 🍽️
 
-Embark on a culinary journey with **Dishes Course**. This project, built with **Express** and **Mongoose**, is your gateway to mastering the fundamentals of the Express library, inspired by top-notch online courses.
+This project is built to refine my beginner Express skills. I built this project based on some online tutorials.
 
 ## 🚀 Project Overview:
 
