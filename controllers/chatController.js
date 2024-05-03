@@ -1,15 +1,13 @@
-"use strict";
-
 const Message = require("../models/message");
 
-module.exports = io => {
-  io.on("connection", client => {
+module.exports = (io) => {
+  io.on("connection", (client) => {
     Message.find({})
       .sort({
-        createdAt: -1
+        createdAt: -1,
       })
       .limit(10)
-      .then(messages => {
+      .then((messages) => {
         client.emit("load all messages", messages.reverse());
       });
     console.log("new connection");
@@ -18,18 +16,18 @@ module.exports = io => {
       console.log("user disconnected");
     });
 
-    client.on("message", data => {
+    client.on("message", (data) => {
       let messageAttributes = {
           content: data.content,
           userName: data.userName,
-          user: data.userId
+          user: data.userId,
         },
         m = new Message(messageAttributes);
       m.save()
         .then(() => {
           io.emit("message", messageAttributes);
         })
-        .catch(error => console.log(`error: ${error.message}`));
+        .catch((error) => console.log(`error: ${error.message}`));
     });
   });
 };

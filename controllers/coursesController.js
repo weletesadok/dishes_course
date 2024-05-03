@@ -1,23 +1,23 @@
 const Course = require("../models/course"),
   httpStatus = require("http-status-codes"),
   User = require("../models/user"),
-  getCourseParams = body => {
+  getCourseParams = (body) => {
     return {
       title: body.title,
       description: body.description,
       maxStudents: body.maxStudents,
-      cost: body.cost
+      cost: body.cost,
     };
   };
 
 module.exports = {
   index: (req, res, next) => {
     Course.find()
-      .then(courses => {
+      .then((courses) => {
         res.locals.courses = courses;
         next();
       })
-      .catch(error => {
+      .catch((error) => {
         console.log(`Error fetching courses: ${error.message}`);
         next(error);
       });
@@ -33,12 +33,12 @@ module.exports = {
   create: (req, res, next) => {
     let courseParams = getCourseParams(req.body);
     Course.create(courseParams)
-      .then(course => {
+      .then((course) => {
         res.locals.redirect = "/courses";
         res.locals.course = course;
         next();
       })
-      .catch(error => {
+      .catch((error) => {
         console.log(`Error saving course: ${error.message}`);
         next(error);
       });
@@ -53,11 +53,11 @@ module.exports = {
   show: (req, res, next) => {
     let courseId = req.params.id;
     Course.findById(courseId)
-      .then(course => {
+      .then((course) => {
         res.locals.course = course;
         next();
       })
-      .catch(error => {
+      .catch((error) => {
         console.log(`Error fetching course by ID: ${error.message}`);
         next(error);
       });
@@ -70,12 +70,12 @@ module.exports = {
   edit: (req, res, next) => {
     let courseId = req.params.id;
     Course.findById(courseId)
-      .then(course => {
+      .then((course) => {
         res.render("courses/edit", {
-          course: course
+          course: course,
         });
       })
-      .catch(error => {
+      .catch((error) => {
         console.log(`Error fetching course by ID: ${error.message}`);
         next(error);
       });
@@ -86,14 +86,14 @@ module.exports = {
       courseParams = getCourseParams(req.body);
 
     Course.findByIdAndUpdate(courseId, {
-      $set: courseParams
+      $set: courseParams,
     })
-      .then(course => {
+      .then((course) => {
         res.locals.redirect = `/courses/${courseId}`;
         res.locals.course = course;
         next();
       })
-      .catch(error => {
+      .catch((error) => {
         console.log(`Error updating course by ID: ${error.message}`);
         next(error);
       });
@@ -106,7 +106,7 @@ module.exports = {
         res.locals.redirect = "/courses";
         next();
       })
-      .catch(error => {
+      .catch((error) => {
         console.log(`Error deleting course by ID: ${error.message}`);
         next();
       });
@@ -114,7 +114,7 @@ module.exports = {
   respondJSON: (req, res) => {
     res.json({
       status: httpStatus.OK,
-      data: res.locals
+      data: res.locals,
     });
   },
   errorJSON: (error, req, res, next) => {
@@ -122,12 +122,12 @@ module.exports = {
     if (error) {
       errorObject = {
         status: httpStatus.INTERNAL_SERVER_ERROR,
-        message: error.message
+        message: error.message,
       };
     } else {
       errorObject = {
         status: httpStatus.OK,
-        message: "Unknown Error."
+        message: "Unknown Error.",
       };
     }
     res.json(errorObject);
@@ -135,8 +135,8 @@ module.exports = {
   filterUserCourses: (req, res, next) => {
     let currentUser = res.locals.currentUser;
     if (currentUser) {
-      let mappedCourses = res.locals.courses.map(course => {
-        let userJoined = currentUser.courses.some(userCourse => {
+      let mappedCourses = res.locals.courses.map((course) => {
+        let userJoined = currentUser.courses.some((userCourse) => {
           return userCourse.equals(course._id);
         });
         return Object.assign(course.toObject(), { joined: userJoined });
@@ -153,18 +153,18 @@ module.exports = {
     if (currentUser) {
       User.findByIdAndUpdate(currentUser, {
         $addToSet: {
-          courses: courseId
-        }
+          courses: courseId,
+        },
       })
         .then(() => {
           res.locals.success = true;
           next();
         })
-        .catch(error => {
+        .catch((error) => {
           next(error);
         });
     } else {
       next(new Error("User must log in."));
     }
-  }
+  },
 };
